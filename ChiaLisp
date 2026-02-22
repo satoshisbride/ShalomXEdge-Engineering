@@ -1,0 +1,111 @@
+Here are several practical **Chialisp** smart contract (puzzle) examples, ranging from beginner classics to more realistic patterns. These draw from official Chia documentation (chialisp.com and docs.chia.net) and common community references as of 2026. Chialisp compiles to CLVM and is used to define spending conditions for coins on the Chia blockchain.
+
+### 1. Password-Locked Coin (Classic Beginner Example)
+A simple (insecure for real use) puzzle that only allows spending if the correct password is provided. The hashed version is more secure.
+
+**Basic (insecure) version** — for learning only:
+```chialisp
+(mod (password)
+  (if (= password "secret123")
+      (list)                  ; success → empty list = spend ok
+      (x "wrong password")    ; fail with error
+  )
+)
+```
+
+**Secure hashed version** (recommended – curry the expected hash):
+```chialisp
+(mod (password new_puzhash amount)
+  (include condition_codes.clib)  ; for CREATE_COIN constant
+
+  (defconstant CREATE_COIN 51)
+
+  (if (= (sha256 password) (q . 0x2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824))  ; sha256("hello")
+      (list (list CREATE_COIN new_puzhash amount))   ; create new coin with remainder
+      (x "incorrect password")
+  )
+)
+```
+
+- **How to use**: Curry the puzzle with the expected hash → lock coins → spend with solution like `(hello <new_puzzle_hash> <amount_in_mojos>)`.
+- Source: Official Chialisp tutorial ("First Smart Coin").
+
+### 2. Delegated Puzzle or Hidden Puzzle (Standard Transaction Base)
+This is the foundation of most Chia wallets (p2_delegated_puzzle_or_hidden_puzzle). It allows delegating spending authority or hiding the real puzzle.
+
+```chialisp
+(mod (delegated_puzzle solution hidden_reveal)
+  (include condition_codes.clib)
+
+  (if hidden_reveal
+      (a hidden_reveal solution)                     ; reveal & execute hidden puzzle
+      (a delegated_puzzle solution)                  ; delegate to revealed puzzle
+  )
+)
+```
+
+- Used extensively in real wallets for flexibility and security.
+- Source: chia-blockchain repo (`p2_delegated_puzzle_or_hidden_puzzle.clvm`).
+
+### 3. Singleton Top Layer (Unique ID Tracking – Used in NFTs, CATs, Plot NFTs)
+Singletons provide a unique, verifiable identity on-chain (basis for many advanced contracts).
+
+```chialisp
+; Simplified excerpt from singleton_top_layer_v1_1.clvm
+(mod (inner_puzzle singleton_id amount inner_solution)
+  ; ... checks singleton lineage and ID ...
+  (if (correct_singleton_structure)
+      (inner_puzzle inner_solution)  ; delegate to inner logic
+      (x "singleton mismatch")
+  )
+)
+```
+
+- Full implementations in chia-blockchain repo (singleton_top_layer_v1_1.clvm, singleton_launcher.clvm).
+- Used for: Plot NFTs (pooling), CAT issuance, DAOs, stateful contracts.
+
+### 4. Basic Timelock (Lock Until Block Height)
+Prevent spending before a certain block height.
+
+```chialisp
+(mod (timelock_height inner_puzzle inner_solution)
+  (include condition_codes.clib)
+
+  (defconstant ASSERT_HEIGHT_PASSED 85)  ; condition opcode
+
+  (list
+    (list ASSERT_HEIGHT_PASSED timelock_height)  ; fail if current height < timelock
+    (a inner_puzzle inner_solution)              ; otherwise delegate
+  )
+)
+```
+
+- Curry with a specific height (e.g., future block number).
+
+### 5. Simple Escrow / 2-of-2 Multisig Pattern
+Requires two signatures (or conditions) to spend.
+
+```chialisp
+(mod (pubkey1 pubkey2 signature1 signature2 amount new_puzhash)
+  (include condition_codes.clib)
+
+  (defconstant AGG_SIG_ME 43)  ; aggregate signature condition
+
+  (if (and (agg_sig_me pubkey1 signature1 (puzzle_hash))
+           (agg_sig_me pubkey2 signature2 (puzzle_hash)))
+      (list (list CREATE_COIN new_puzhash amount))
+      (x "missing signature")
+  )
+)
+```
+
+- Real multisig often uses delegated puzzles for flexibility.
+
+These examples are starting points. For production:
+- Always include security audits.
+- Use `include` for standard libraries (condition_codes.clib, etc.).
+- Test with `brun` (CLVM runner) and `run` (Chialisp compiler).
+- Explore full sources in https://github.com/Chia-Network/chia-blockchain/tree/main/chia/wallet/puzzles
+- Official interactive tutorials: https://chialisp.com (many examples are editable/runnable in-browser).
+
+If you want examples for a specific use case (e.g., CAT2 token logic, offer/escrow, DataLayer integration), let me know!
