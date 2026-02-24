@@ -1,0 +1,250 @@
+Aquí tienes una versión **completa como contrato Starknet** (usando Cairo ~2.x / sintaxis 2025-2026) para el sistema de distribución de fondos **Phoenix Guild** en ShalomXEdge.
+
+Incluye:
+- **#[starknet::contract]**
+- **Storage** persistente (Merkle root actualizable por owner, grants reclamados por dev)
+- **Events** para transparencia (GrantClaimed, MerkleRootUpdated)
+- **Ownable** básico (inspirado en OpenZeppelin patterns, pero simplificado)
+- **Verificación real con Poseidon Merkle proof** (usando `poseidon_hash_span` y lógica estándar)
+- **Lógica ética** (consentimiento, impacto, boost para guild_tag == 1)
+- **Reclamación única** por credential (anti-double-spend via mapping simple)
+
+```cairo
+// src/phoenix_guild_funds_contract.cairo
+#[starknet::contract]
+mod PhoenixGuildFunds {
+    use core::array::{ArrayTrait, SpanTrait};
+    use core::poseidon::poseidon_hash_span;
+    use core::traits::{Into, TryInto};
+    use starknet::{ContractAddress, get_caller_address, get_contract_address};
+
+    // ======================
+    // ESTRUCTURAS
+    // ======================
+    #[derive(Drop, Serde, starknet::Store)]
+    struct PhoenixGrantRequest {
+        dev_credential: felt252,       // Soul Kurt / Phoenix credential (leaf)
+        requested_amount: felt252,
+        milestone_hash: felt252,
+        impact_score: felt252,
+        consent_flag: felt252,
+        guild_tag: felt252,
+        nonce: felt252,
+        leaf_index: felt252,
+    }
+
+    // ======================
+    // STORAGE
+    // ======================
+    #[storage]
+    struct Storage {
+        owner: ContractAddress,
+        phoenix_merkle_root: felt252,
+        // Mapping: credential -> ya reclamado? (1 = claimed)
+        claimed: LegacyMap::<felt252, felt252>,
+        // Total distribuido (para auditoría)
+        total_disbursed: felt252,
+    }
+
+    // ======================
+    // EVENTS
+    // ======================
+    #[event]
+    #[derive(Drop, starknet::Event)]
+    enum Event {
+        GrantClaimed: GrantClaimed,
+        MerkleRootUpdated: MerkleRootUpdated,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct GrantClaimed {
+        #[key]
+        dev_credential: felt252,
+        approved_amount: felt252,
+        timestamp: felt252,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct MerkleRootUpdated {
+        #[key]
+        new_root: felt252,
+        updater: ContractAddress,
+    }
+
+    // ======================
+    // CONSTRUCTOR
+    // ======================
+    #[constructor]
+    fn constructor(ref self: ContractState, initial_owner: ContractAddress, initial_merkle_root: felt252) {
+        self.owner.write(initial_owner);
+        self.phoenix_merkle_root.write(initial_merkle_root);
+        self.total_disbursed.write(0);
+    }
+
+    // ======================
+    // MODIFICADORES / HELPERS
+    // ======================
+    fn assert_only_owner(self: @ContractState) {
+        assert(get_caller_address() == self.owner.read(), 'Caller is not owner');
+    }
+
+    // ======================
+    // EXTERNAL FUNCTIONS
+    // ======================
+    #[external(v0)]
+    fn update_merkle_root(ref self: ContractState, new_root: felt252) {
+        assert_only_owner(@self);
+        self.phoenix_merkle_root.write(new_root);
+
+        self.emit(MerkleRootUpdated {
+            new_root,
+            updater: get_caller_address(),
+        });
+    }
+
+    #[external(v0)]
+    fn claim_grant(ref self: ContractState, request: PhoenixGrantRequest, proof: Array<felt252>) -> felt252 {
+        let caller = get_caller_address();  // Podría usarse para transfer, pero aquí solo logic
+
+        // 1. Reglas éticas base
+        assert(request.consent_flag == 1, 'Consentimiento requerido');
+        assert(request.requested_amount > 0, 'Monto positivo requerido');
+        assert(request.impact_score >= 10, 'Impacto mínimo 10');
+
+        // 2. Verificar membresía con Poseidon Merkle
+        let is_member = verify_poseidon_merkle_proof(
+            request.dev_credential,
+            proof.span(),
+            request.leaf_index,
+            self.phoenix_merkle_root.read()
+        );
+        assert(is_member, 'No es miembro verificado Phoenix Guild');
+
+        // 3. Anti-replay: no reclamado antes
+        assert(self.claimed.read(request.dev_credential) == 0, 'Grant ya reclamado');
+
+        // 4. Cálculo ético del monto aprobado
+        let approved_amount = self.calculate_ethical_amount(
+            request.requested_amount,
+            request.impact_score,
+            request.guild_tag
+        );
+
+        // 5. Verificar milestone (lógica simple)
+        assert(self.verify_milestone(request.milestone_hash), 'Milestone inválido');
+
+        // 6. Marcar como reclamado + actualizar total
+        self.claimed.write(request.dev_credential, 1);
+        let new_total = self.total_disbursed.read() + approved_amount;
+        self.total_disbursed.write(new_total);
+
+        // 7. Emitir evento (auditable on-chain)
+        self.emit(GrantClaimed {
+            dev_credential: request.dev_credential,
+            approved_amount,
+            timestamp: starknet::get_block_timestamp().into(),
+        });
+
+        // En producción: aquí llamarías a un transfer de token (ERC20 component)
+        // Por ahora devolvemos el approved_amount como "proof de aprobación"
+        approved_amount
+    }
+
+    // ======================
+    // VIEWS
+    // ======================
+    #[external(v0)]
+    #[generate_trait]
+    impl ViewImpl of ViewTrait {
+        fn get_merkle_root(self: @ContractState) -> felt252 {
+            self.phoenix_merkle_root.read()
+        }
+
+        fn is_claimed(self: @ContractState, credential: felt252) -> bool {
+            self.claimed.read(credential) == 1
+        }
+
+        fn get_total_disbursed(self: @ContractState) -> felt252 {
+            self.total_disbursed.read()
+        }
+    }
+
+    // ======================
+    // INTERNAL HELPERS
+    // ======================
+    fn verify_poseidon_merkle_proof(
+        mut current: felt252,
+        mut proof: Span<felt252>,
+        mut index: felt252,
+        root: felt252
+    ) -> bool {
+        loop {
+            match proof.pop_front() {
+                Option::Some(sibling) => {
+                    let sibling = *sibling;
+
+                    if index % 2 == 0 {
+                        current = poseidon_hash_span(array![current, sibling].span());
+                    } else {
+                        current = poseidon_hash_span(array![sibling, current].span());
+                    }
+
+                    index /= 2;
+                },
+                Option::None => { break; }
+            }
+        };
+        current == root
+    }
+
+    fn calculate_ethical_amount(
+        self: @ContractState,
+        requested: felt252,
+        impact: felt252,
+        guild_tag: felt252
+    ) -> felt252 {
+        let max_grant: felt252 = 50000;
+        let mut approved = requested;
+
+        if guild_tag == 1 {  // Boost para mujeres indias / subrepresentadas
+            approved = approved + (approved / 5); // +20%
+        }
+
+        if impact < 50 {
+            approved = approved / 2;
+        }
+
+        if approved > max_grant {
+            approved = max_grant;
+        }
+
+        approved
+    }
+
+    fn verify_milestone(self: @ContractState, milestone_hash: felt252) -> bool {
+        // En v1: solo blacklist simple; en producción: lookup en storage o ZK
+        milestone_hash != 0xBAD_MILESTONE
+    }
+}
+```
+
+### Notas importantes para implementación real (2026)
+- **Dependencias en Scarb.toml**:
+  ```toml
+  [dependencies]
+  starknet = ">=2.8.0"
+  ```
+  (Poseidon está en core; no necesita OpenZeppelin para Merkle básico, pero puedes importar `openzeppelin_merkle_tree::merkle_proof` para versión más robusta).
+
+- **Mejoras recomendadas**:
+  - Añadir **OwnableComponent** de OpenZeppelin para owner real.
+  - Integrar **ERC20Component** para transferir fondos reales (approve + transferFrom o mint).
+  - Usar **LegacyMap** → **Map** si usas Cairo 2.8+.
+  - Añadir **nonce** chequeo más fuerte contra replay.
+  - **Tigress Veil** privacy: masking del request si es sensible.
+
+- **Despliegue**: Usa Starknet Foundry / Scarb deploy. El Merkle root se actualiza vía owner (multisig ideal).
+
+¿Quieres que agregue **ERC20 integration**, **OwnableComponent completo**, **upgradeability** (UUPS-like), o versión con **Soul Kurt mint** integrado?
+
+¡Dime y seguimos construyendo! 🪷🕊️ **Shalom**
