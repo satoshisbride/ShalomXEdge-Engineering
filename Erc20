@@ -1,0 +1,276 @@
+Aquí tienes la versión **actualizada del contrato Starknet** con **integración real de ERC20** usando el componente **OpenZeppelin Cairo** (estándar en 2026 para contratos seguros y auditados en Starknet).
+
+### Cambios clave realizados:
+- Añadimos el componente **ERC20Component** de OpenZeppelin.
+- El contrato ahora **minta y transfiere** tokens reales (en lugar de solo devolver un número).
+- El **approved_amount** se transfiere al solicitante (`get_caller_address()`) vía `self.erc20.transfer`.
+- Incluimos inicialización del token en el constructor (nombre, símbolo, supply inicial mint al owner).
+- Añadimos **OwnableComponent** básico (recomendado por OZ) para controlar actualizaciones del Merkle root.
+- Usamos **u256** para cantidades (estándar ERC20 en Cairo).
+- El contrato ahora es un **token ERC20 que distribuye sus propios tokens** como grants (puedes cambiarlo a transferFrom de un vault si prefieres).
+
+### Dependencias en Scarb.toml (necesario para compilar)
+```toml
+[dependencies]
+starknet = ">=2.8.0"
+openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag = "v0.20.0" }  # usa la versión más reciente disponible en feb 2026
+```
+
+### Código completo del contrato
+
+```cairo
+// src/phoenix_guild_funds_contract.cairo
+#[starknet::contract]
+mod PhoenixGuildFunds {
+    use core::array::{ArrayTrait, SpanTrait};
+    use core::poseidon::poseidon_hash_span;
+    use core::traits::{Into, TryInto};
+    use openzeppelin::access::ownable::OwnableComponent;
+    use openzeppelin::token::erc20::{ERC20Component, ERC20HooksEmptyImpl, DefaultConfig};
+    use starknet::{ContractAddress, get_caller_address, get_contract_address, get_block_timestamp};
+
+    component!(path: OwnableComponent, storage: ownable, event: OwnableEvent);
+    component!(path: ERC20Component, storage: erc20, event: ERC20Event);
+
+    // ERC20 Mixin (exponer todas las funciones estándar ERC20)
+    #[abi(embed_v0)]
+    impl ERC20MixinImpl = ERC20Component::ERC20MixinImpl<ContractState>;
+
+    // Ownable impl (para owner-only functions)
+    #[abi(embed_v0)]
+    impl OwnableImpl = OwnableComponent::OwnableImpl<ContractState>;
+
+    impl OwnableInternalImpl = OwnableComponent::InternalImpl<ContractState>;
+
+    // ======================
+    // ESTRUCTURAS
+    // ======================
+    #[derive(Drop, Serde, starknet::Store)]
+    struct PhoenixGrantRequest {
+        dev_credential: felt252,       // Soul Kurt / Phoenix credential (leaf)
+        requested_amount: u256,
+        milestone_hash: felt252,
+        impact_score: felt252,
+        consent_flag: felt252,
+        guild_tag: felt252,
+        nonce: felt252,
+        leaf_index: felt252,
+    }
+
+    // Merkle Root oficial del árbol de miembros Phoenix Guild
+    const PHOENIX_MERKLE_ROOT_INITIAL: felt252 = 0x0a1b2c3d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef;
+
+    // ======================
+    // STORAGE
+    // ======================
+    #[storage]
+    struct Storage {
+        #[substorage(v0)]
+        ownable: OwnableComponent::Storage,
+        #[substorage(v0)]
+        erc20: ERC20Component::Storage,
+        phoenix_merkle_root: felt252,
+        // credential -> ya reclamado? (1 = claimed)
+        claimed: LegacyMap::<felt252, bool>,
+        total_disbursed: u256,
+    }
+
+    // ======================
+    // EVENTS
+    // ======================
+    #[event]
+    #[derive(Drop, starknet::Event)]
+    enum Event {
+        #[flat]
+        OwnableEvent: OwnableComponent::Event,
+        #[flat]
+        ERC20Event: ERC20Component::Event,
+        GrantClaimed: GrantClaimed,
+        MerkleRootUpdated: MerkleRootUpdated,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct GrantClaimed {
+        #[key]
+        dev_credential: felt252,
+        approved_amount: u256,
+        recipient: ContractAddress,
+        timestamp: u64,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct MerkleRootUpdated {
+        #[key]
+        new_root: felt252,
+        updater: ContractAddress,
+    }
+
+    // ======================
+    // CONSTRUCTOR
+    // ======================
+    #[constructor]
+    fn constructor(
+        ref self: ContractState,
+        initial_owner: ContractAddress,
+        name: felt252,
+        symbol: felt252,
+        initial_supply: u256,
+        recipient: ContractAddress,
+    ) {
+        self.ownable.initializer(initial_owner);
+        self.phoenix_merkle_root.write(PHOENIX_MERKLE_ROOT_INITIAL);
+
+        // Inicializar ERC20
+        self.erc20.initializer(name, symbol);
+        self.erc20._mint(recipient, initial_supply);
+    }
+
+    // ======================
+    // EXTERNAL FUNCTIONS
+    // ======================
+    #[external(v0)]
+    fn update_merkle_root(ref self: ContractState, new_root: felt252) {
+        self.ownable.assert_only_owner();
+        self.phoenix_merkle_root.write(new_root);
+
+        self.emit(MerkleRootUpdated {
+            new_root,
+            updater: get_caller_address(),
+        });
+    }
+
+    #[external(v0)]
+    fn claim_grant(ref self: ContractState, request: PhoenixGrantRequest, proof: Array<felt252>) {
+        let recipient = get_caller_address();
+
+        // 1. Reglas éticas
+        assert(request.consent_flag == 1, 'Consentimiento requerido');
+        assert(request.requested_amount > 0_u256, 'Monto positivo requerido');
+        assert(request.impact_score >= 10, 'Impacto mínimo 10');
+
+        // 2. Verificar membresía Phoenix Guild
+        let is_member = self.verify_poseidon_merkle_proof(
+            request.dev_credential,
+            proof.span(),
+            request.leaf_index,
+            self.phoenix_merkle_root.read()
+        );
+        assert(is_member, 'No es miembro verificado Phoenix Guild');
+
+        // 3. Anti-replay
+        assert(!self.claimed.read(request.dev_credential), 'Grant ya reclamado');
+
+        // 4. Cálculo ético del monto
+        let approved_amount = self.calculate_ethical_amount(
+            request.requested_amount,
+            request.impact_score,
+            request.guild_tag
+        );
+
+        // 5. Verificar milestone
+        assert(self.verify_milestone(request.milestone_hash), 'Milestone inválido');
+
+        // 6. Transferir tokens ERC20 al solicitante
+        self.erc20.transfer(recipient, approved_amount);
+
+        // 7. Marcar como reclamado + stats
+        self.claimed.write(request.dev_credential, true);
+        self.total_disbursed.write(self.total_disbursed.read() + approved_amount);
+
+        // Evento
+        self.emit(GrantClaimed {
+            dev_credential: request.dev_credential,
+            approved_amount,
+            recipient,
+            timestamp: get_block_timestamp(),
+        });
+    }
+
+    // ======================
+    // VIEWS
+    // ======================
+    #[external(v0)]
+    #[generate_trait]
+    impl ViewImpl of ViewTrait {
+        fn get_merkle_root(self: @ContractState) -> felt252 {
+            self.phoenix_merkle_root.read()
+        }
+
+        fn is_claimed(self: @ContractState, credential: felt252) -> bool {
+            self.claimed.read(credential)
+        }
+
+        fn get_total_disbursed(self: @ContractState) -> u256 {
+            self.total_disbursed.read()
+        }
+
+        // Puedes exponer más views del ERC20 si lo necesitas
+    }
+
+    // ======================
+    // INTERNAL HELPERS
+    // ======================
+    fn verify_poseidon_merkle_proof(
+        self: @ContractState,
+        mut current: felt252,
+        mut proof: Span<felt252>,
+        mut index: felt252,
+        root: felt252
+    ) -> bool {
+        loop {
+            match proof.pop_front() {
+                Option::Some(sibling) => {
+                    let sibling = *sibling;
+                    if index % 2 == 0 {
+                        current = poseidon_hash_span(array![current, sibling].span());
+                    } else {
+                        current = poseidon_hash_span(array![sibling, current].span());
+                    }
+                    index /= 2;
+                },
+                Option::None => { break; }
+            }
+        };
+        current == root
+    }
+
+    fn calculate_ethical_amount(
+        self: @ContractState,
+        requested: u256,
+        impact: felt252,
+        guild_tag: felt252
+    ) -> u256 {
+        let max_grant: u256 = 50000_u256;
+        let mut approved = requested;
+
+        if guild_tag == 1 {  // Boost ético
+            approved = approved + (approved / 5_u256); // +20%
+        }
+
+        if impact < 50 {
+            approved = approved / 2_u256;
+        }
+
+        if approved > max_grant {
+            approved = max_grant;
+        }
+
+        approved
+    }
+
+    fn verify_milestone(self: @ContractState, milestone_hash: felt252) -> bool {
+        milestone_hash != 0xBAD_MILESTONE
+    }
+}
+```
+
+### Notas finales para implementación
+- El contrato **minta** el supply inicial al `recipient` en el constructor (puede ser un vault o multisig).
+- En producción: considera agregar **pausability**, **blacklist**, o **vesting** para grants.
+- Para mayor seguridad: usa **ERC20SafeAllowance** o **ERC20Permit** si lo necesitas.
+- El **transfer** asume que el contrato tiene balance suficiente (mint inicial o depósitos previos).
+- Si quieres que el contrato **reciba** fondos de otro ERC20 (ej. USDC), cambia `transfer` por `transfer_from` y añade approve logic.
+
+¿Quieres agregar ahora **pausabilidad**, **vesting para grants**, **Soul Kurt mint integrado**, o cambiar a **transfer_from de un vault externo**?
+
+¡Dime y seguimos refinándolo! 🪷🕊️ **Shalom**
