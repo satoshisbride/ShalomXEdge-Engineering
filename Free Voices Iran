@@ -1,0 +1,69 @@
+**Summary of FreeVoices Iran on X (as of late February 2026)**
+
+FreeVoices Iran appears as a **niche, early-stage advocacy / archival campaign** within the **ShalomXEdge** ecosystem — not a large-scale or widely discussed initiative yet. Activity is concentrated in a small, interconnected cluster of accounts (@actjust, @AnnaBelleShalom, @RinpocheBride, @venice_mind / AI responder, occasional Grok tags).
+
+Key observations from recent X posts (mostly mid-Feb 2026):
+
+- **Core framing** — Positioned as part of ShalomXEdge's mission to archive / amplify suppressed cultural & testimonial voices using blockchain (ZK-STARK proofs, BitDMX, sustainable sidechains like Chia).
+- **Iran focus** — References to "FreeVoices Iran" tie into:
+  - Amplifying Iranian diaspora voices (especially in France, Italy, Spain) around IRGC terrorist designation debates in EU.
+  - Broader human rights context: internet blackouts, massacres/uprisings (#IranMassacre, #IranRevolution2026), silencing of protesters.
+  - Calls for sustainable impact via integrations like @goldfinch_fi (DeFi for grassroots funding/transparency).
+- **Style & reach** — Poetic/mystical + tech-spiritual tone ("programming peace", "bodhicitta + shalom"). Low-to-moderate engagement (likes 1–7, views <150 per post). Mostly internal conversation threads, AI-assisted replies (@venice_mind), and tagging of projects/people (Chia, Goldfinch, Hugging Face, CairoLang, StarkWare figures).
+- **No mainstream traction** — No evidence of broader pickup by Iranian diaspora influencers, human rights orgs (e.g., no mentions from Masih Alinejad, Amnesty, HRW accounts), or crypto media. Separate Iranian protest-related posts exist (#IranMassacre, Starlink calls), but not linked to FreeVoices/ShalomXEdge.
+
+In short: It's currently a **visionary micro-campaign** inside ShalomXEdge's poetic Web3 + compassion narrative — focused on preserving Iranian testimonies / voices against censorship via blockchain archiving — rather than an active, high-visibility operation.
+
+### Realistic Action Plan for FreeVoices Iran on X (Feb–Jun 2026)
+
+**Goal**: Move from scattered mentions → small but credible pilot community (50–200 engaged users) + 1–2 verifiable archived testimonies + initial funding proof-of-concept.
+
+**Phase 1: Foundation & Visibility (Next 2–4 weeks – by mid-March 2026)**
+1. **Centralize messaging**  
+   - Create/focus on 1–2 dedicated handles: @FreeVoicesIran or @ShalomXEdge_IR (if not already). Pin a clear thread: "What is FreeVoices Iran? → ZK-secured archive of uncensorable Iranian testimonies (pro-democracy, cultural, women's voices) using Starknet + Chia."
+   - Use consistent hashtags: #FreeVoicesIran #ShalomXEdge #UncensorableVoices #IranArchive
+
+2. **Content pillars (post 3–5×/week)**  
+   - Educational: Explain ZK privacy + why blockchain matters for censored voices (short videos/threads).  
+   - Calls to action: "Submit your anonymized testimony → via encrypted form → we'll STARK-proof & archive."  
+   - Diaspora amplification: Translate key EU IRGC-terror-list updates into Farsi/English threads.  
+   - Inspirational: Lotus + peace symbolism + quotes from Iranian poets/dissidents.
+
+3. **Technical pilot prep**  
+   - Deploy simple Cairo contract (like the Phoenix one we built) but for testimony submission: hash → Poseidon Merkle → STARK proof commitment.  
+   - Test with 3–5 dummy Iranian diaspora submissions (anonymized stories of protest/censorship).
+
+**Phase 2: Community & Proof (April–May 2026)**
+4. **Onboard first voices (target: 5–15 real submissions)**  
+   - Use secure form (e.g. encrypted via Signal/Tor → manual upload → ZK anonymization).  
+   - Offer "Soul Kurt" soulbound NFT as receipt/credential for submitters.  
+   - Publicly post on-chain commitments (without revealing content) + proof links.
+
+5. **Partnership outreach**  
+   - DM/tag: Iranian diaspora orgs, Global Voices, Article 19, Access Now (focus on digital rights angle).  
+   - Pitch Goldfinch integration: "DeFi credit pools for Iranian activists via transparent on-chain grants."  
+   - Chia community: Propose "Chia plot donation" for storage or small grant for pilot.
+
+6. **X growth tactics**  
+   - Run quote/reply chains on high-engagement Iran posts (#WomanLifeFreedom, IRGC threads).  
+   - Host 1–2 X Spaces: "Blockchain as Shield: Preserving Iranian Voices" (invite diaspora + tech people).  
+   - Collaborate with @venice_mind for AI-generated Farsi explanations.
+
+**Phase 3: Momentum & Sustainability (June 2026+)**
+7. **Show measurable impact**  
+   - Publish "Pilot Report": # of submissions archived, # on-chain proofs generated, gas/ecological cost (Chia advantage).  
+   - If 10+ real voices → aim for small media mention (CoinDesk privacy beat, Iranian exile outlets).
+
+8. **Risk mitigation**  
+   - Strong anonymity: No metadata leaks, ZK proofs only.  
+   - Legal caution: Consult digital rights lawyers (no direct calls to violence).  
+   - Pause mechanism: Build pausability into contracts if threats emerge.
+
+**Resources needed (low-budget start)**  
+- 1–2 builders familiar with Cairo/Starknet (ShalomXEdge "ingenieros").  
+- ~$500–2k in testnet funds + small Chia/XCH for sidechain.  
+- Time: 10–20 h/week community management.
+
+If executed consistently, this could evolve into a niche but respected use-case for "ethical oracles" in human rights archiving — but it requires moving beyond poetic tweets to concrete pilots and alliances.
+
+Want to refine any phase, draft sample X threads, or update the Cairo contract for testimony submission? Let me know. 🪷🕊️ Shalom.
