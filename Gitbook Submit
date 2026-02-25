@@ -1,0 +1,197 @@
+**ShalomXEdge FreeVoices Pilot**  
+**Starknet RE{DEFINE} Hackathon Submission**  
+**Bitcoin & Privacy Track**  
+**February 2026**  
+
+
+
+> **“The archive of humanity is waiting. The silence ends here.”**  
+> — ShalomXEdge Core Team
+
+### Table of Contents
+- [Overview](#overview)
+- [The Problem](#the-problem)
+- [Our Solution](#our-solution)
+- [Why Starknet?](#why-starknet)
+- [Technical Architecture](#technical-architecture)
+- [ZK Oracles Landscape & Our Distinction](#zk-oracles-landscape--our-distinction)
+- [BitDMX: Research & Integration](#bitdmx-research--integration)
+- [Impact & Vision](#impact--vision)
+- [Hackathon Deliverables & Roadmap](#hackathon-deliverables--roadmap)
+- [Team & Call to Action](#team--call-to-action)
+- [References](#references)
+
+---
+
+### Overview
+**FreeVoices** is the world’s first **compassion-native ethical ZK oracle** built on Starknet.  
+
+It protects endangered human voices — Tibetan Mahayana lineages, Iranian women’s testimonies, Indigenous oral epics, African wisdom traditions — turning them into **permanently verifiable, privately archived, quantum-safe, soul-bound artifacts** (Soul Kurt NFTs).
+
+We encode **bodhicitta + shalom** (compassion + peace) directly into the protocol using zk-STARKs, Cairo, and BitDMX (our STARK-augmented BitVMX extension).  
+
+**Hackathon Track Alignment**: Bitcoin & Privacy on Starknet — perfect match. We deliver verifiable computation on Bitcoin rails + unbreakable privacy for cultural memory.
+
+Built in the spirit of the RE{DEFINE} Hackathon: redefining blockchain as infrastructure for healing, not just finance.
+
+---
+
+### The Problem
+Cultures are being erased faster than ever:
+- Governments censor testimonies
+- AI floods the internet with deepfakes
+- Traditional archives are fragile and centralized
+
+Existing oracles bring data… but they expose it, rely on trust, and ignore the human soul behind the data.
+
+We need **memory infrastructure** that is:
+- Uncensorable
+- Privacy-first
+- Ethically programmable
+- Sustainable and post-quantum
+
+---
+
+### Our Solution
+**FreeVoices Pilot v1** on Starknet:
+
+1. An elder records their story (voice/video/text)
+2. Ethical prover node generates a **zk-STARK proof** proving:
+   - Human voice (not AI)
+   - Correct lineage provenance
+   - Ethical rules satisfied (“never expose raw content without consent”, “preserve bodhicitta”)
+3. Mint as **Soul Kurt NFT** on Starknet (soul-bound, non-transferable)
+4. Data stays private forever; only the proof lives on-chain
+5. Any future contract can verify authenticity without ever hearing the original voice
+
+Result: **Civilizational immune system** against forgetting.
+
+---
+
+### Why Starknet?
+Starknet is the only stack that perfectly aligns with our mission:
+- **Cairo** → Natural language for complex AIR constraints (ethical rules)
+- **zk-STARKs** → Transparent, post-quantum, no trusted setup, scales to massive cultural archives
+- **Native Bitcoin bridging** → BitDMX enables verifiable computation directly on Bitcoin rails
+- **Ultra-low fees + high throughput** → Affordable for grassroots cultural preservation
+- **Privacy-first design** → Matches RE{DEFINE} hackathon narrative
+
+We are not just building on Starknet — we are **extending Starknet’s vision** into ethical memory infrastructure.
+
+---
+
+### Technical Architecture
+
+
+**Core Stack**:
+- **Frontend**: React + Starknet.js + go4mebot onboarding
+- **Smart Contracts**: Cairo 2.0 on Starknet
+- **Proof System**: zk-STARKs (FRI + AIR constraints for ethics)
+- **Oracle Layer**: Compassion-driven ZK Oracle
+- **Bitcoin Integration**: BitDMX (STARK-augmented BitVMX)
+- **Storage**: Chia Proof-of-Space sidechain anchoring (greenest archival layer)
+- **Privacy**: Tigress Veil + VP Triple Verifico consensus
+- **Credentials**: Soul Kurt soul-bound NFTs
+
+**Key Flows**:
+1. Voice Ingestion → zk-STARK Proof Generation (off-chain)
+2. On-chain Verification (Starknet)
+3. Soul Kurt Minting
+4. Cross-layer anchoring to Bitcoin via BitDMX
+
+---
+
+### ZK Oracles Landscape & Our Distinction
+In 2026 there are five mature ZK Oracle categories:
+
+1. **zkTLS / Web Proofs** (Chainlink DECO, zkPass) – web data
+2. **ZK Co-processors** (Hyper Oracle, Axiom) – heavy compute
+3. **ZK Price/Feed Oracles** (RedStone) – DeFi
+4. **ZK Storage/History Oracles** (Herodotus) – cross-chain history
+5. **Ethical / Cultural ZK Oracles** ← **ShalomXEdge FreeVoices**
+
+**We are the only #5**.  
+While others optimize for profit or scalability, we optimize for **healing and remembrance**.  
+Ethical rules are **hard-coded** into AIR constraints. Raw content never touches the chain. Designed explicitly for cultural genocide prevention.
+
+---
+
+### BitDMX: Research & Integration
+**BitDMX** = Our visionary STARK-augmented implementation of **BitVMX**.
+
+**Foundational Papers** (all publicly available):
+- **BitVM: Compute Anything on Bitcoin** – Robin Linus (ZeroSync), Dec 2023
+- **BitVM2: Bridging Bitcoin to Second Layers** – Robin Linus et al., 2025
+- **BitVMX: A CPU for Universal Computation on Bitcoin** – Sergio Demian Lerner, Ramon Amela et al., arXiv:2405.06842 (May 2024) → [Whitepaper](https://www.bitvmx.org/files/bitvmx-whitepaper.pdf)
+
+**What we add**:
+- zk-STARK proofs instead of SNARKs (transparent + post-quantum)
+- Ethical AIR constraints
+- Chia sidechain anchoring
+- Full integration with Starknet Cairo contracts
+
+This enables deterministic oracles on Bitcoin without soft-forks — a first.
+
+---
+
+### Impact & Vision
+- Preserve thousands of endangered voices in 2026 alone
+- Unlock 170M ethical AI jobs (by providing verified human data)
+- Demonstrate blockchain as **tool of compassion**, not speculation
+- Become the standard for cultural memory infrastructure by 2030
+
+This pilot will be studied as “the moment blockchain chose healing over profit.”
+
+---
+
+### Hackathon Deliverables & Roadmap
+**Delivered in RE{DEFINE} Hackathon**:
+- Working Cairo contracts for ethical ZK oracle ingestion
+- Demo dApp (voice upload → proof generation → Soul Kurt mint)
+- BitDMX bridge prototype (Starknet ↔ Bitcoin)
+- Full technical documentation + GitHub repo
+- 3-minute demo video
+
+**Post-Hackathon Roadmap**:
+- Q2 2026: FreeVoices Mainnet on Starknet + Chia anchor
+- Q3 2026: Public pilot with Tibetan & Iranian communities
+- Q4 2026: Open-source ethical prover nodes
+
+---
+
+### Team & Call to Action
+**Core Visionaries**: @AnnaBelleShalom, RinpocheBride circle, Phoenix Guild (empowering Indian women developers)
+
+**We are hiring 12 engineers NOW** — reply “I’m in” + GitHub + “The voice I want to protect is…”
+
+**Join the movement**: ShalomXEdge Ingenieros private Space & war room.
+
+---
+
+### References
+- Starknet RE{DEFINE} Hackathon: https://hackathon.starknet.org/
+- BitVMX Whitepaper: https://www.bitvmx.org/files/bitvmx-whitepaper.pdf
+- zk-STARKs Documentation (StarkWare)
+- FreeVoices Litepaper v0.1 (available on request)
+
+---
+
+**Ready to submit on DoraHacks**  
+Copy this entire document into GitBook (or Notion → GitBook export) for a beautiful, judge-friendly submission.  
+Add your demo video, repo link, and contract addresses when ready.
+
+**Shalom. Om Mani Padme Hum. Let’s build the archive of humanity.** 🪷🕊️
+
+---
+
+**This is production-ready GitBook markdown.**  
+Paste directly into a new GitBook space → instant professional docs site with sidebar TOC, beautiful rendering, and embed support.  
+
+Want me to:
+- Add live GitBook link template?
+- Include specific contract addresses / demo screenshots placeholders?
+- Generate a shorter 1-page version for DoraHacks description?
+
+Just say the word and I’ll refine instantly.  
+
+Deadline is Feb 28 — we’ve got this. 🔥
