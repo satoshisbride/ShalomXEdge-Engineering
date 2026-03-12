@@ -605,7 +605,7 @@ Our construction does not introduce novel cryptographic primitives. Security red
 
 *Application:* Accumulate receipts are Merkle proofs using SHA-256. Receipt soundness follows directly from [11].
 
-**Note on Accumulate's Merkle Structure:** Accumulate uses a Merkle Mountain Range (MMR) variant [1, 13, 14] rather than a balanced Merkle tree. MMR is an append-only structure where sub-trees are combined as they reach equal height, requiring only log₂(n) "mountain tips" in storage. This structure, invented by Peter Todd for Bitcoin UTXO commitments [13] and formally analyzed in [14], is adapted in Accumulate [1] for efficient chain state management. The verification algorithm walks the proof path identically to balanced trees; security still reduces to hash collision resistance.
+**Note on Accumulate's Merkle Structure:** Accumulate uses a Merkle Mountain Range (MMR) variant [1, 13] rather than a balanced Merkle tree. MMR is an append-only structure where sub-trees are combined as they reach equal height, requiring only log₂(n) "mountain tips" in storage. This structure, invented by Peter Todd for Bitcoin UTXO commitments [13], was adopted by Accumulate [1] for efficient chain state management. Cevallos [14] provides recent formal analysis of MMR security properties. The verification algorithm walks the proof path identically to balanced trees; security still reduces to hash collision resistance.
 
 **Theorem 2 (STARK Soundness [2]):** No PPT adversary can produce accepting STARK proof for false statement except with probability 2^(-λ).
 

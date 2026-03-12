@@ -18,9 +18,9 @@ We do not reprove established cryptographic results. We:
 
 Formally: Given tree T with root r and elements {e₁...eₙ}, no PPT adversary can output (e*, π*) where e* ∉ T and Verify(r, e*, π*) = 1, except with probability ≤ Adv^CR_H.
 
-**Merkle Mountain Range Variant:** Accumulate uses a Merkle Mountain Range (MMR) structure [5, 6] rather than a balanced tree. MMR is an append-only structure invented by Peter Todd [5] for Bitcoin UTXO commitments, formally analyzed in [6]. Sub-trees combine as they reach equal height, requiring only log₂(n) storage. Security still reduces to collision resistance—the proof path verification is equivalent to standard Merkle proofs.
+**Merkle Mountain Range Variant:** Accumulate uses a Merkle Mountain Range (MMR) structure [4, 5] rather than a balanced tree. MMR is an append-only structure invented by Peter Todd [5] for Bitcoin UTXO commitments, adopted by Accumulate [4] for chain state management. Cevallos [6] provides recent formal analysis of MMR security properties. Sub-trees combine as they reach equal height, requiring only log₂(n) storage. Security still reduces to collision resistance—the proof path verification is equivalent to standard Merkle proofs.
 
-**Application to Accumulate:** Accumulate receipts are MMR proofs using SHA-256. Receipt soundness follows from [1, 5, 6].
+**Application to Accumulate:** Accumulate receipts are MMR proofs using SHA-256. Receipt soundness follows from [1, 4, 5].
 
 ### STARK Security
 
