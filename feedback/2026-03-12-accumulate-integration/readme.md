@@ -16,6 +16,7 @@ This folder contains technical feedback on the SBC 2026 paper submission, includ
 | `architecture.md` | Technical architecture for Accumulate-StarkNet integration |
 | `cairo-contract.cairo` | Reference Cairo implementation for receipt verification |
 | `formal-security-analysis.md` | Formal security proofs with citations to established literature |
+| `submission-assessment.md` | Analysis of publication venues, grant opportunities, and recommendations |
 
 ## Key Contributions
 
