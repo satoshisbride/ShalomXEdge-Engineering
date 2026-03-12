@@ -579,42 +579,102 @@ Full Cairo source provided in Appendix A. Key components:
 
 ## 6. Security Analysis
 
+Our construction does not introduce novel cryptographic primitives. Security reduces to established results for Merkle trees [11], STARK proofs [2], and digital signatures [12]. We cite these foundations and prove only the composition.
+
 ### 6.1 Threat Model
 
+**System model:**
+- Accumulate Network: DPoS network anchoring to Bitcoin/Ethereum/StarkNet
+- Anchor: Merkle root of Accumulate state, committed to target chain
+- Receipt: Merkle proof from entry to anchor
+- Verifier: Cairo contract on StarkNet
+
 **Adversary capabilities:**
-- Controls minority of Accumulate validators
+- Controls minority of Accumulate validators (< 1/3)
 - Observes all on-chain transactions
-- Cannot break SHA-256 or discrete log
+- Submits arbitrary receipts and proofs to verifier
 
-**Security goals:**
-- Soundness: Cannot prove false statements
-- Privacy: Cannot learn private witness values
-- Data integrity: Cannot forge receipts
+**Adversary limitations:**
+- Cannot break SHA-256 collision resistance
+- Cannot break STARK soundness (2^(-128))
+- Cannot forge Ed25519 signatures
 
-### 6.2 Security Properties
+### 6.2 Security Foundations
 
-**Theorem 1 (Receipt Soundness):** An adversary cannot produce a valid receipt for data not in the Accumulate chain except with probability 2^(-256) (SHA-256 collision).
+**Theorem 1 (Merkle Security [11]):** For a Merkle tree with collision-resistant hash H, no PPT adversary can produce valid proof for element not in tree except with probability ≤ Adv^CR_H.
 
-**Theorem 2 (Anchor Integrity):** Receipts verify only against stored anchors. Accumulate anchors commit to Bitcoin with PoW finality.
+*Application:* Accumulate receipts are Merkle proofs using SHA-256. Receipt soundness follows directly from [11].
 
-**Theorem 3 (Zero-Knowledge):** STARK proofs reveal nothing about private witness beyond the statement being proven. Security reduction to random oracle model.
+**Note on Accumulate's Merkle Structure:** Accumulate uses a Merkle Mountain Range (MMR) variant [1, 13, 14] rather than a balanced Merkle tree. MMR is an append-only structure where sub-trees are combined as they reach equal height, requiring only log₂(n) "mountain tips" in storage. This structure, invented by Peter Todd for Bitcoin UTXO commitments [13] and formally analyzed in [14], is adapted in Accumulate [1] for efficient chain state management. The verification algorithm walks the proof path identically to balanced trees; security still reduces to hash collision resistance.
 
-**Theorem 4 (Binding):** Once commitment is in Accumulate, prover cannot open to different value (collision resistance).
+**Theorem 2 (STARK Soundness [2]):** No PPT adversary can produce accepting STARK proof for false statement except with probability 2^(-λ).
 
-**Theorem 5 (Authority Binding):** Data at URL `acc://adi/path` can only be written by keys authorized by ADI `acc://adi`. Receipt for a URL cryptographically proves which authority created the data.
+*Application:* Cairo programs compile to STARK proofs. Predicate soundness inherited from [2].
 
-**Corollary (Pseudonymous Authority):** An ADI can be pseudonymous (e.g., `acc://0x7f3a8b...`). Authority is verifiable without real-world identity linkage. This enables:
-- Proving "data from known oracle" without oracle revealing internal structure
-- Proving "credential from government" without revealing which citizen
-- Proving "attestation from employer" without revealing which employee
+**Theorem 3 (STARK Zero-Knowledge [2]):** STARK verifier learns nothing beyond statement truth.
 
-### 6.3 Limitations
+*Application:* Private witness (value, blinding factor) not revealed. ZK property inherited from [2].
+
+**Theorem 4 (Commitment Binding):** SHA-256 commitment c = H(v || r) cannot be opened to v' ≠ v except with probability ≤ Adv^CR_SHA256.
+
+*Proof:* If adversary opens c to both (v, r) and (v', r'), then H(v || r) = H(v' || r') is a collision. □
+
+### 6.3 Authority Binding
+
+**Theorem 5:** Data at URL `acc://adi/path` can only be written by keys authorized by ADI `acc://adi`.
+
+*Proof:* By Accumulate protocol specification [1]:
+1. Each ADI has key pages defining authorized signers
+2. Transactions modifying `acc://adi/*` require valid signature
+3. Ed25519 is EUF-CMA secure [12]
+4. Unauthorized write requires signature forgery
+
+Security reduces to Ed25519 unforgeability. □
+
+**Corollary:** ADI can be pseudonymous. Authority verifiable without real-world identity linkage.
+
+### 6.4 Composition
+
+**Theorem 6:** Verifying Accumulate receipt then proving predicate via STARK preserves soundness and zero-knowledge.
+
+*Proof:*
+
+Let Layer 1 = Receipt verification (public, deterministic)
+Let Layer 2 = STARK proof of P(value) given commitment
+
+**Soundness:** Adversary must either:
+- Forge receipt (violates Theorem 1), or
+- Produce STARK proof for false P (violates Theorem 2)
+
+By union bound: Pr[break] ≤ Adv^CR_SHA256 + 2^(-λ)
+
+**Zero-Knowledge:**
+- Layer 1 is public (receipt, anchor are public inputs)
+- Layer 2 reveals only P(value), not value (Theorem 3)
+- Layers compose: public preprocessing + ZK proof is standard [2]
+
+No information leakage between layers. □
+
+### 6.5 Security Summary
+
+| Property | Proof Method | Citation |
+|----------|--------------|----------|
+| Receipt soundness | Merkle/MMR security | [11, 13, 14] |
+| Predicate soundness | STARK soundness | [2] |
+| Zero-knowledge | STARK ZK | [2] |
+| Commitment binding | Collision resistance | Standard |
+| Authority binding | EUF-CMA signatures | [12] |
+| Composition | Theorem 6 above | This work |
+
+**Conclusion:** No novel cryptography. Security inherits from standard primitives. The contribution is architectural integration.
+
+### 6.6 Limitations
 
 **Data availability:** Accumulate must remain available for receipt generation. Proofs don't provide data recovery.
 
-**Trusted setup for anchors:** Anchor registration currently requires trusted operator. Future work: Bitcoin SPV verification in Cairo.
+**Anchor trust:** Anchor registration currently requires trusted operator. Future work: Bitcoin SPV verification in Cairo.
 
-**Commitment scheme:** Current design uses SHA-256 commitments. Pedersen commitments would enable homomorphic properties (additive proofs).
+**Commitment scheme:** SHA-256 commitments are non-algebraic. Pedersen commitments would enable homomorphic proofs.
 
 ---
 
@@ -776,6 +836,14 @@ Reference implementation is provided in Cairo for StarkNet deployment. We identi
 [9] Mina Foundation. (2020). Mina Protocol: A Succinct Blockchain. https://minaprotocol.com
 
 [10] Breidenbach, L., et al. (2021). Chainlink 2.0: Next Steps in the Evolution of Decentralized Oracle Networks. *Chainlink Labs*.
+
+[11] Merkle, R. (1980). Protocols for Public Key Cryptosystems. *IEEE Symposium on Security and Privacy*.
+
+[12] Bernstein, D. J., et al. (2012). High-speed high-security signatures. *Journal of Cryptographic Engineering*.
+
+[13] Todd, P. (2016). Making UTXO Set Growth Irrelevant With Low-Latency Delayed TXO Commitments. https://petertodd.org/2016/delayed-txo-commitments
+
+[14] Cevallos, A. (2025). The Merkle Mountain Belt. *arXiv preprint*. https://arxiv.org/abs/2511.13582
 
 ---
 

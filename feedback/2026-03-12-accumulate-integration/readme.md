@@ -15,6 +15,7 @@ This folder contains technical feedback on the SBC 2026 paper submission, includ
 | `paper-v3.md` | Revised paper: "Privacy-Preserving Batch Oracles: Hierarchical Proofs via Accumulate and zkSTARK" |
 | `architecture.md` | Technical architecture for Accumulate-StarkNet integration |
 | `cairo-contract.cairo` | Reference Cairo implementation for receipt verification |
+| `formal-security-analysis.md` | Formal security proofs with citations to established literature |
 
 ## Key Contributions
 
