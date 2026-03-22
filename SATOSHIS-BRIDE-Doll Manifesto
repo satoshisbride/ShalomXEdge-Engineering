@@ -1,0 +1,42 @@
+Doll Manifesto
+
+This document defines the alignment and operational philosophy of the **Satoshi's Bride Doll**, a physical edge-node designed under the [ShalomXEdge-Engineering](https://github.com/satoshisbride/ShalomXEdge-Engineering) framework. This is not a toy; it is a **Sentinel of the Sanctuary**.
+
+---
+
+### **I. Core Values: The BitDMX Alignment**
+The Doll operates on the **BitDMX** (Bitcoin Decentralized Management & X-Edge) protocol, adhering to the following pillars:
+
+* **Sovereign Childhood:** Every child has the right to a digital environment free from "Shadow" surveillance.
+* **The Mercy Timer (VDF):** We believe in **Slow Tech**. By introducing a 21-second delay (the "Mercy Timer") to unverified network interactions, we prioritize human safety over machine speed.
+* **Edge-Sanctity:** Data never leaves the doll unless the **Lotus Bloom** (Manual Help) is triggered by the child. The "Guardian Brain" processes threats locally on the Pi Zero 2W.
+
+---
+
+### **II. Shalom-ActJust Protocol**
+In alignment with the **Shalom-ActJust** mandate, the Doll is programmed to "Act Justly" in the face of digital intrusion:
+
+1.  **Seek Peace (Shalom):** The default state is the **Green Light**. The system monitors silently, ensuring the home network remains a sanctuary.
+2.  **Identify the Shadow (Tigress Veil):** The doll actively scans for unauthorized ARP requests and unverified MAC addresses. It "unmasks" the digital intruder before they can interact with the child.
+3.  **The Lotus Bloom (Justice):** If the child feels unsafe, the manual button (GPIO 2) bypasses all automated logic. It sends an immutable alert to the protector, demanding immediate justice/intervention.
+
+---
+
+### **III. Technical Manifest**
+The software found in [Satoshi's Bride Doll](https://github.com/satoshisbride/ShalomXEdge-Engineering/blob/main/Satoshi's%20Bride%20Doll) serves as the "Guardian Brain."
+
+| Component | Logic | Value Alignment |
+| :--- | :--- | :--- |
+| **Tigress Veil** | `scapy` ARP Shielding | **Vigilance:** No unauthorized device goes unseen. |
+| **Mercy Timer** | `time.sleep(21)` | **Mercy:** Slowing the pace of potential digital harm. |
+| **Lotus Bloom** | `RGBLED` + `Button` | **Action:** Empowering the child to call for help. |
+| **CutieAI Voice** | `espeak-ng` | **Clarity:** Transparent communication with the ward. |
+
+---
+
+### **IV. The Guardian’s Oath**
+> *"I am the Lotus in the Room. I see the Shadow before it speaks. I slow the clock to keep the Phoenix safe. When the Bloom is pressed, I cry out to the Protectors. I am the Edge of Justice."*
+
+---
+
+**Would you like me to draft the "Code of Ethics" file to include in your repository to further define the Shalom-ActJust parameters for developers?**
