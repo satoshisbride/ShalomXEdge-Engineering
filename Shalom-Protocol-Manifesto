@@ -1,0 +1,13 @@
+The **Shalom Protocol** is a two-layer architectural framework designed by [Annabelle Shalom](https://sbc26.hotcrp.com/doc/sbc26-paper250.pdf) (known as [@AnnaBelleShalom](https://x.com/AnnaBelleShalom/status/2035950542954918312)) and collaborators like [Paul Snow](https://sbc26.hotcrp.com/doc/sbc26-paper250.pdf). It aims to solve the "collapse of trust" in the age of AI by creating **Accountable Privacy**.
+
+### Core Architecture
+* **Layer 1 (Accumulate):** Uses [Stateful Merkle Trees](https://sbc26.hotcrp.com/doc/sbc26-paper250.pdf) anchored to the **Bitcoin** blockchain. This provides "temporal integrity," proving exactly when data existed and which [URL-based authority](https://sbc26.hotcrp.com/doc/sbc26-paper250.pdf) (ADI) created it.
+* **Layer 2 (zkSTARK):** Utilizes **Cairo/StarkNet** to prove properties of that data (e.g., "Age > 18") without revealing the raw values.
+
+### The "Mercy Timer"
+A signature element of the [ShalomXEdge](https://youdigdat.com/satoshisbride) vision is the [Mercy Timer](https://raw.githubusercontent.com/satoshisbride/ShalomXEdge-Engineering/refs/heads/main/mercy-timer-bitdmx). Inspired by **Chia VDFs**, it enforces a sequential **21-second delay** on automated systems. This "human-scale" pacing acts as an ethical buffer against predatory AI bots and front-running, ensuring that "the soul is never overrun" by the machine.
+
+### Philosophical Intent
+The protocol functions as a technical manifesto for **Peace through Strength**. It asserts that while AI can fake unanchored records, it cannot fake what it cannot see. By combining [authority provenance](https://sbc26.hotcrp.com/doc/sbc26-paper250.pdf) with selective disclosure, it builds a future where identity is verifiable but privacy remains a "lotus offering" for the innocent.
+
+Would you like me to dive deeper into the technical [Cairo implementation](https://sbc26.hotcrp.com/doc/sbc26-paper250.pdf) details?
