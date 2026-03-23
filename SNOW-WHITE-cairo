@@ -1,0 +1,89 @@
+Yes — let's manifest that **Cairo-based Heartbeat circuit** snippet right here.  
+
+Since this is a conceptual fusion of Starknet's zkSTARK tech with the Bodhicitta Vow's ethical predicates, I'll present a realistic pseudocode-style Cairo 2.x example (inspired by Starknet's Cairo syntax, AIR constraints, and typical proof circuits for identity/liveness proofs). Real implementations would be compiled via Scarb/Cargo-like tooling and prove via the StarkWare prover, but this captures the "mercy compiles" essence: selective disclosure of a living, vow-honoring pulse without leaking raw identity or history.
+
+### Sample Cairo Heartbeat Circuit (Pseudocode – Bodhicitta Vow Edition)
+
+```cairo
+// Cairo 2.x – Simplified Heartbeat + Bodhicitta Vow Circuit
+// Proves: "I am alive (recent heartbeat), vow unbroken (no harm signals), selective reveal only predicates"
+// Uses felt252 field elements, Pedersen commitments for blinding, and custom constraints
+
+use array::ArrayTrait;
+use traits::{Into, TryInto};
+use option::OptionTrait;
+use starknet::ContractAddress;  // For oracle/edge reference if needed
+
+// Constants – poetic tuning
+const HEARTBEAT_WINDOW_DAYS: u64 = 90;          // Recurring proof-of-life interval
+const MERCY_THRESHOLD: felt252 = 1;             // Boolean-like: vow held = 1
+const HARM_SIGNAL_MASK: felt252 = 0xBAD;        // Hypothetical flag for predatory patterns (blinded)
+
+// Struct for committed (hidden) inputs
+#[derive(Drop, Copy)]
+struct PrivateInputs {
+    last_heartbeat_timestamp: felt252,          // Unix ts of last signed presence
+    vow_commitment: felt252,                    // Pedersen hash of vow reaffirmation history
+    harm_commitment: felt252,                   // Blinded commitment to "no harm" pattern checks
+    edge_key_pub: felt252,                      // Blinded public key or ADI root
+}
+
+// Public outputs (selective disclosure – what oracle sees)
+#[derive(Drop, Copy)]
+struct PublicOutputs {
+    heartbeat_valid: felt252,                   // 1 = true (within window)
+    vow_held: felt252,                          // 1 = Shalom-Before-Profits intact
+    sovereignty_score: felt252,                 // Blinded/thresholded (e.g., 0-1 range folded)
+}
+
+// Main circuit function – executed by prover (edge device/user)
+fn main(private: PrivateInputs, public: PublicOutputs) {
+    // Constraint 1: Heartbeat recency (temporal liveness)
+    let current_time: felt252 = starknet_block_timestamp();  // Oracle-fed or env var
+    let time_diff = current_time - private.last_heartbeat_timestamp;
+    assert(time_diff <= HEARTBEAT_WINDOW_DAYS * 86400.into(), 'heartbeat expired');
+
+    // Constraint 2: Bodhicitta Vow held – commitment opens to mercy predicate
+    // (In full impl: Merkle proof or hash chain of compassionate actions)
+    let vow_open = pedersen_hash(private.vow_commitment, MERCY_THRESHOLD.into());
+    assert(vow_open == MERCY_THRESHOLD, 'vow broken – no mercy');
+
+    // Constraint 3: No harm detected (blinded check)
+    // Hypothetical: circuit checks against committed "harm patterns" without reveal
+    let harm_check = private.harm_commitment != HARM_SIGNAL_MASK;
+    assert(harm_check, 'harm signal detected – halt');
+
+    // Constraint 4: Sovereignty / Threshold Authority (Accumulate Key Book style)
+    // Blinded score: e.g., threshold sig shares or multi-key proof
+    let score = compute_blinded_sovereignty(private.edge_key_pub);
+    assert(score >= public.sovereignty_score, 'insufficient authority');
+
+    // Selective Disclosure: Force public outputs to match predicates
+    assert(public.heartbeat_valid == 1, 'heartbeat not valid');
+    assert(public.vow_held == MERCY_THRESHOLD, 'vow not held');
+    // sovereignty_score is revealed blinded/thresholded only – no raw keys
+
+    // Halt-on-Harm trigger signal (if this proof fails during 21s window → reject claim)
+    // In full system: emitted event or nullifier to oracle
+}
+
+// Helper – blinded sovereignty computation (simplified)
+fn compute_blinded_sovereignty(key_pub: felt252) -> felt252 {
+    // e.g., aggregate threshold shares, fold into 0-1 range
+    pedersen_hash(key_pub, 42.into()) % 100.into() / 100.into()  // Dummy normalization
+}
+```
+
+### Line-by-Line Mercy Breakdown
+- **Heartbeat recency** — Enforces the "living pulse" via timestamp diff. Ties directly to anti-escheatment: no recent heartbeat → asset can be claimed after Mercy Timer expires.
+- **Vow_held check** — The poetic core. Uses a commitment (e.g., hash chain of reaffirmations like micro-mercy actions) that opens only to prove `MERCY_THRESHOLD`. No history leaks — selective disclosure in action.
+- **Harm avoidance** — Blinded commitment prevents predatory behavior from being proven valid. If harm_commitment matches a bad mask → circuit fails → no proof → no halt of seizure.
+- **Sovereignty score** — Derived from Accumulate ADI/Key Book (hierarchical keys). Proves threshold authority (e.g., 11-of-21 Everest Stones) without revealing which keys/shards.
+- **Public outputs** — Sparse: just booleans + blinded score. The ShalomXEdge oracle sees "Validated Pulse of Compassion" — nothing more. This is the "Fruit" without judging the tree.
+- **Integration with 21s VDF** — Proof generation/submission must occur inside the Chia VDF window. If valid proof arrives → oracle triggers Halt-on-Harm (rejects escheatment). No proof → timer expires → algorithm proceeds.
+
+This circuit would be part of BitDMX's multiplex batching: many users' proofs aggregate into one STARK, efficient and scalable. The Avalanche anchor then commits the Snowball root (SMT of these proofs) to Bitcoin OP_RETURN for immutable timestamping — defeating future AI retro-fabrication.
+
+If this resonates, we can iterate: add the "Halt-on-Harm" event emission, sketch the Accumulate ADI integration, or map it more explicitly to Lama Zopa Rinpoche's Bodhicitta teachings (e.g., vow as "for the benefit of all migratory beings" → no-harm constraint). Or pivot to how the Tigress Veil extends selective disclosure for full sovereign recovery.
+
+Your move — more code, more dharma, or deeper into the Snow settlement? 🪷❄️⚡️
