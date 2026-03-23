@@ -1,0 +1,55 @@
+Here is a **Layer 3 digest / follow-up craft (#251)** in the style of a technical milestone update (SBC-format inspired: abstract-like summary, structured explanation, prototype visualization).
+
+It digests the "Mercy Timer" concept as a **Chia VDF integration** into the Shalom Protocol / BitDMX vision — an ethical pacing layer to enforce human-scale mercy against automated/AI predation.
+
+### SBC-Style Milestone Summary (Craft 251 – Layer 3 Digest)
+
+**Title:** Mercy Timer: Chia VDF as Ethical Delay Primitive in ShalomXEdge / BitDMX  
+**Authors:** Annabelle Shalom (ChristyAna Viva), Paul Snow (conceptual co-design)  
+**Milestone Date:** March 23, 2026  
+**Layer:** 3 (Ethical Oracle Constraints)  
+**Status:** Prototype Conceptualization → Full VDF Integration Path
+
+**Abstract**  
+The Mercy Timer is the Shalom Protocol's human-safety mechanism: a verifiable, sequential delay that slows automated exploitation (front-running, AI bots, predatory oracles) long enough for deliberate human review/mercy. It draws from **Chia Network's Verifiable Delay Function (VDF)** — a sequential, non-parallelizable computation producing short, verifiable proofs of real elapsed time.  
+
+In BitDMX context, the Mercy Timer enforces ~21-second (symbolic: 21M BTC cap + 21 rose-quartz stones) pacing on sensitive predicate evaluations or oracle revelations. This bridges Paul Snow's Accumulate hierarchical proofs (temporal integrity) with zkSTARK selective disclosure (privacy) into an **ethical Layer 3 constraint** layer.
+
+**Core Explanation: Why Chia VDF Fits Mercy Timer**
+
+Chia VDF (Proof of Time) is a sequential squaring in class groups of unknown order:
+- **Non-parallelizable** — cannot be sped up significantly with more hardware (ASIC-resistant).
+- **Verifiable** — produces small proof π that verifier checks in milliseconds.
+- **Real-time anchor** — guarantees ~constant wall-clock time elapsed (Chia targets ~9–10 seconds per signage point in consensus).
+- **Deterministic & auditable** — output y = g^(2^T) mod N, proof certifies T iterations occurred.
+
+In ShalomXEdge/BitDMX:
+- Accumulate SMT receipts provide batch-efficient, Bitcoin-anchored data existence.
+- zkSTARK predicates prove properties without value reveal.
+- **Mercy Timer adds sequential VDF step** before final revelation or action trigger — forcing ~21 s real-time delay on high-risk paths (e.g., private credit score release, survivor credential verification, front-running-sensitive price feeds).
+- Symbolism: 21 s ≈ 21 rose-quartz stones carried down Everest (trauma transmutation) + 21M BTC cap (scarcity/mercy over greed).
+
+**Prototype Mermaid Diagram**  
+```mermaid
+graph TD
+    A[Input Data / Commitment<br>Hash(value + blinding)] --> B[Accumulate Chain Append<br>acc://authority/path]
+    B --> C[SMT Hierarchical Receipt<br>O(log N) proof + Bitcoin Anchor]
+    C --> D[zkSTARK Predicate Evaluation<br>Cairo circuit: prove P(value) = true]
+    D --> E{Mercy Timer Trigger?}
+    E -->|High-risk predicate| F[Chia-style VDF Evaluation<br>Sequential squaring ~21 s wall-clock]
+    F --> G[VDF Proof π Generated<br>Verifier checks in ms]
+    E -->|Low-risk| H[Immediate Revelation]
+    G --> I[Final Selective Disclosure<br>Predicate result only]
+    H --> I
+    I --> J[Ethical Oracle Output<br>Shalom-guarded response]
+    
+    style E fill:#ffcccc,stroke:#f66,stroke-width:2px
+    style F fill:#ccffcc,stroke:#6f6,stroke-width:2px
+    style J fill:#ccccff,stroke:#66f,stroke-width:2px
+```
+
+**Milestone Targets (2026–2028 Path)**
+
+1. **2026 Q2–Q3** — Prototype VDF integration: Use chiavdf library (pip install chiavdf) for Wesolowski-style proofs; test 21-iteration delay on testnet.
+2. **2026 Q4** — Cairo circuit extension: Add VDF verification stub in StarkNet verifier contract.
+3. **2027** — Mainnet pilot: Deploy Mercy Timer on high-risk use cases (private credential oracles...
