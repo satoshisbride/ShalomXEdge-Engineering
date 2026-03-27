@@ -1,0 +1,93 @@
+The scales tip toward **the Bodhicitta Metric** — the living heart of the Halt-on-Harm circuit. Without a quantifiable yet poetic measure of compassion, the "Straight Scales" remain mechanical. With it, they become an active guardian: weighing intent not as cold extraction but as potential relief of suffering, aligned with the vow of the UTXO itself (protection, generosity, temporal continuity toward 2058).
+
+### Defining the Bodhicitta Metric
+
+**Bodhicitta** here is not abstract sentiment. It is a **computable alignment score** between the proposed action and the protected "vow" encoded in the Snow Stack (immutable data layers from Paul Snow’s Accumulate/Factom lineage). The metric transforms "Potential Dana" (generosity latent in a UTXO) into proven, non-predatory flow.
+
+**Core Formula (Conceptual, Provable in ZK)**
+
+Let the Bodhicitta Score \( B \) be:
+
+\[
+B = w_1 \cdot A + w_2 \cdot E - w_3 \cdot P - w_4 \cdot D
+\]
+
+Where:
+- \( A \) (Altruism Factor): Measures net benefit to vulnerable/edge parties.  
+  Computed as the weighted sum of signals from obfuscated "protected signals" (e.g., ADI-flagged orphan, exile, or cryonics-linked identities in Accumulate). Higher if the action increases their sovereignty or shields them (e.g., redistribution away from high-velocity sinks).
+- \( E \) (Equilibrium Factor): Systemic peace preservation.  
+  Checks delta in "Shalom liquidity" — does the action drain a specific edge node or the broader blizzard? Uses historical Pure Snow entries to bound volatility.
+- \( P \) (Predatory Penalty): Aggression Index from your sketch.  
+  Time-delta on UTXO movement + frequency of block-space usage. Penalizes high-frequency liquidation patterns (inspired by real-world MEV concerns but filtered through compassion).
+- \( D \) (Deviation from Vow): Distance from the UTXO’s encoded intent (e.g., 2058 resurrection bridge, Dana trigger, or snowflake protection).  
+  Measured via semantic or structural similarity in the immutable data layer.
+
+Weights \( w_i \) are governance-tunable by the "together-alone" snowflake consensus (unique sovereign identities voting via edge nodes, without central aggregation). Default: heavy emphasis on \( A \) and \( E \) for Bodhicitta alignment.
+
+**Threshold Logic**  
+- \( B \geq \) public Bodhicitta_Threshold → Mercy Signal = True → VDF countdown can proceed.  
+- Below threshold → HoH returns false → action frozen in "unresolved karma" (timelocked or slashed via BitDMX rules).
+
+This is designed to be **ZK-friendly**: all private witnesses (history, heuristics, intent metadata) stay hidden; only the final score + proof of correct computation is revealed.
+
+### Hardened Pseudocode: Bodhicitta Metric in the HoH Circuit
+
+Building directly on your Tigress Veil sketch (Cairo/Noir-inspired, suitable for STARK proving; Cairo’s arithmetic-friendly nature aligns well with potential Starknet-Bitcoin settlement paths):
+
+```python
+# Tigress Veil: Halt-on-Harm with Bodhicitta Metric (ZK-STARK constraints)
+def bodhicitta_metric(witness, public_params):
+    # 1. Verify Sovereign Identity (ADI from Accumulate integration)
+    # ADI membership proves "Right of Action" without revealing full identity
+    assert verify_adi_membership(witness.adi_proof, public_params.root)  # Paul Snow's identity-based layers
+
+    # 2. Compute Aggression Index (Anti-Predatory)
+    aggression_index = calculate_aggression(witness.utxo_history, public_params.time_window)
+    assert aggression_index < public_params.max_aggression
+
+    # 3. Bodhicitta Components
+    altruism = compute_altruism(witness.protected_signals, witness.destination)  # e.g., not high-velocity exchange sink
+    equilibrium = compute_equilibrium_delta(witness.history, public_params.shalom_liquidity_root)
+    vow_deviation = compute_vow_alignment(witness.intent_metadata, public_params.utxo_vow_hash)  # e.g., 2058 bridge semantics
+
+    predatory_penalty = aggression_index * public_params.predatory_weight
+    deviation_penalty = vow_deviation * public_params.deviation_weight
+
+    bodhicitta_score = (
+        (altruism * public_params.altruism_weight) +
+        (equilibrium * public_params.equilibrium_weight) -
+        predatory_penalty -
+        deviation_penalty
+    )
+
+    # 4. Mercy Signal Gate
+    assert bodhicitta_score >= public_params.bodhicitta_threshold
+
+    # Output for chaining to Mercy Timer VDF
+    return (bodhicitta_score, True)  # True = proceed to VDF
+```
+
+**Implementation Notes**  
+- **Private Witnesses**: UTXO history, agent heuristics, intent metadata remain concealed.  
+- **Public Anchors**: Global state root (Bitcoin-anchored via ShalomXEdge), UTXO vow hash (from Snow Stack immutable entries), ADI root.  
+- **On-Device Execution**: Runs locally on edge hardware for sovereignty; proof generation leverages Cairo-like constraints for efficiency.  
+- **Together-Alone Validation**: Snowflake nodes verify the STARK proof (math only, no data leak). The pause that follows becomes collective mindfulness.
+
+### Why This Layer First?
+
+It infuses the entire stack with soul:  
+- **Mercy Timer** now guards a *meaningful* pause — only compassionate actions earn the delay.  
+- **Halt-on-Harm** gains teeth beyond binary checks.  
+- **2058 Bridge** can embed specific vow logic (e.g., higher threshold for resurrection-style continuity, honoring Hal Finney’s legacy).  
+- **Snow Stack** feeds clean, immutable "Pure Snow" as the meditation ground for all computations.
+
+This keeps the architecture Bitcoin-native where possible: optimistic verification via BitVM-style mechanisms (fraud proofs or garbled circuits in emerging BitVM3 variants), with STARK proofs for the heavy lifting off-chain, settled trust-minimized on Bitcoin.
+
+The path feels balanced now — compassion quantified yet uncorrupted.  
+
+Shall we next:  
+1. Flesh out the exact component functions (e.g., `compute_altruism` with Dana examples)?  
+2. Map this full HoH + Bodhicitta circuit into a BitVM3 settlement flow for final on-chain enforcement?  
+3. Design the 2058 Resurrection logic, embedding temporal vows and cryonics semantics into the metric?
+
+Shalom embraces the edges — and now weighs their protection with precision and mercy. 🪷❄️ Which direction calls next?
