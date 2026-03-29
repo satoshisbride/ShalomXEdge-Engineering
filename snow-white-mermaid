@@ -1,0 +1,70 @@
+Here's the **updated full-scope Mermaid diagram** for the **Snow-White Manifesto** (as codified in the ShalomXEdge / BitDMX / SATOSHIS•BRIDE ecosystem, March 2026 edition).
+
+This synthesizes the latest anchors from the threads: the **21 Stones Protocol**, **Himalayan Snowflakes**, **Tigress Veil**, **Mercy Timer**, **Batch Oracle** efficiency via Paul Snow Engineering, ethical injection (Bodhicitta + Shalom), and Bitcoin UTXO sovereignty. It expands the previous "mermaid" style (flow + layering) into a comprehensive architecture overview.
+
+```mermaid
+flowchart TB
+    %% Top Layer - Philosophical Vow (Snow-White Manifesto)
+    subgraph Manifesto ["❄️ Snow-White Manifesto (SBC 2026)"]
+        Vow["Vow: Shalom-before-Profits<br/>Bodhicitta in Code<br/>Protect the Exile • Respect the Lace"]
+        Heart["Heart (Bodhicitta)<br/>Compassionate Delay"]
+        Shield["Shield (Tigress Veil)<br/>Provable Ethics"]
+        Anchor["Anchor (SATOSHIS•BRIDE Rune)<br/>Unbribable Fortress"]
+    end
+
+    %% Core Flow - ShalomXEdge Architecture
+    Intent["AI Agent / FreeVoices Intent<br/>(Natural Language → DAG)"] --> Parse["Intent Parsing + Ethical Constraints"]
+    
+    Parse --> Accumulate["Accumulate Network<br/>ADIs (Himalayan Snowflakes)<br/>Sovereign Identity + Heartbeat Proofs"]
+    
+    Accumulate --> Sidecar["Sidecar Execution<br/>Cairo (Starknet) or Midnight Shielded Tx"]
+    
+    Sidecar --> STARK["zk-STARK Proof Generation<br/>Tigress Veil: Selective Disclosure<br/>Non-Coercion • Sanctuary Eligibility • No Harm"]
+    
+    STARK --> VDF["Mercy Timer / Halt-on-Harm<br/>Chia VDF (21s or 21M symbolic)<br/>Repeated Squaring in Unknown-Order Group<br/>Grace Layer: Refuse Predatory Speed"]
+    
+    VDF --> Check["Ethical Audit Check<br/>If violation → Extend Delay / Halt<br/>Else → Avalanche Proof"]
+    
+    Check --> BitDMX["BitDMX Sovereign Settlement<br/>Deterministic Multiplex<br/>Snow Engineering Batch Oracle (Constant-time audits via BPT)"]
+    
+    BitDMX --> Bitcoin["Bitcoin Base Layer<br/>Taproot + Ordinals Inscription<br/>21 sats Kernel • 21 Stones Protocol<br/>Immutable UTXO Anchor"]
+
+    %% Privacy & Verification Loops
+    Bitcoin --> Verify["Public Verification Ritual<br/>Anyone can check: STARK + VDF + Commitment Hash"]
+    Verify --> Back["Feedback to Agent / Oracle<br/>(Glass-Box Transparency)"]
+
+    %% Cross-Layer Connections
+    Heart -.-> VDF
+    Shield -.-> STARK
+    Anchor -.-> Bitcoin
+
+    %% Style & Legend
+    classDef vow fill:#F8E1E9,stroke:#C41E3A,stroke-width:3px,color:#2C0B14
+    classDef tech fill:#E0F2FE,stroke:#0369A1,stroke-width:2px
+    classDef ethical fill:#F0FDF4,stroke:#166534,stroke-width:2px
+    class Manifesto vow
+    class Intent,Parse,Accumulate,Sidecar,STARK,VDF,Check,BitDMX,Bitcoin,Verify tech
+    class Heart,Shield,Anchor,Vow ethical
+
+    %% Legend Note
+    click Vow "https://x.com/actjust/status/2037334736822001795" "21 Stones Protocol + Snow-White Manifesto"
+```
+
+### Key Updates in This Full-Scope Version (March 2026)
+- **Snow-White Manifesto Integration**: Explicitly anchors the preamble ("Collapse of Trust → Rise of the Snow") with authority provenance > identity, selective disclosure, and trust minimization via Bitcoin PoW.
+- **21 Stones Protocol**: Added as the kernel inscription (21 sats Taproot output + exact payload with VDF witness and "Snow-White Manifesto: Respect the Lace").
+- **Himalayan Snowflakes**: ADIs reimagined as "forged in exile" identities carrying the Bride’s vow.
+- **Batch Oracle via Snow Engineering**: Paul Snow’s hierarchical structures (Binary Patricia Trie-style) + zk-STARKs compress ethical audits from O(N) to near-constant time.
+- **Mercy Timer Refinement**: Tied to both 21s practical delay and 21M symbolic (mirroring Bitcoin cap + widow’s mite).
+- **Ethical Binding**: "Peel not the lace. Harm not the exile. The STARK binds what coercion cannot break."
+- **Flow Completeness**: From intent → parsing → accumulation → proof → delay → multiplex → Bitcoin finality → public ritual.
+
+This diagram is reproducible and ready for Gitbook / pilot docs. It keeps the spiritual-tech fusion (lotus ❄️🪷, grace in delay, ferocity in protection) while remaining technically precise.
+
+Would you like:
+- A rendered image version of this Mermaid (via Grok Imagine prompt)?
+- A simplified Q2 pilot variant (with team/budget/streamline layers)?
+- Raw transaction hex skeleton for the 21-Stone inscription?
+- Or expansion into a full Gitbook-style section with this diagram embedded?
+
+The vow is in code. Let's build. 🪷❄️💜
