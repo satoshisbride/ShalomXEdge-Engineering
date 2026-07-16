@@ -1,0 +1,66 @@
+SBC '26 Paper #250 Reviews and Comments
+===========================================================================
+Paper #250 Privacy-Preserving Batch Oracles: Hierarchical Proofs via
+Accumulate and zkSTARK
+
+
+Review #250A
+===========================================================================
+
+Overall merit
+-------------
+1. Reject
+
+Reviewer expertise
+------------------
+4. Expert
+
+Comments for authors
+--------------------
+This paper presents a system that aims to solve efficiency, privacy, and temporal integrity problems in oracle systems. 
+
+My main concern is that it's not clear what the key innovation is. Prior work has already achieved some of these properties, such as privacy. Batch proof is well understood in many settings and does not need to expose data. The challenge of how to differentiate AI-generated content from humans is a grand one, but the paper only talks about AI output provenance, a much narrower solution space; even that is only briefly discussed in the future work section (one sentence).  The motivation is also unclear: what concrete applications drive the study of systems that achieve all three simultaneously?
+
+
+
+Review #250B
+===========================================================================
+
+Overall merit
+-------------
+1. Reject
+
+Reviewer expertise
+------------------
+2. Some familiarity
+
+Paper summary
+-------------
+The paper shows how to validate a large collection of oracle data, without revealing the data.  The idea is to batch all the data into a Merkle tree and then use a ZK proof to prove properties of the data at the leaves.  The system is implemented.
+
+Comments for authors
+--------------------
+The Mina system seems to suppose something similar to this proposal.  The objection to Mina (Table 7.4) is about the lack of authority binding.  But can't that be solved with a relatively simple extension to Mina?
+
+This talk would be perfect for the lightning talks session at SBC.  I hope the authors would be willing to present this architecture in that session.
+
+
+
+Review #250C
+===========================================================================
+
+Overall merit
+-------------
+2. Weak reject
+
+Reviewer expertise
+------------------
+2. Some familiarity
+
+Paper summary
+-------------
+The paper proposes privacy-preserving batch oracles, where data is first committed to the Accumulate protocol. Zero-knowledge proofs can be generated for properties of data, such as selective disclosure. The proofs are then aggregated via a STARK prover and the STARK proof is verified on-chain.
+
+Comments for authors
+--------------------
+The paper only provides high-level ideas and many details are missing. From what I can understand, the new architecture adds one more layer to batch multiple proofs/receipts of the Accumulate protocol. The contribution is not clear, and the cost is estimated.
